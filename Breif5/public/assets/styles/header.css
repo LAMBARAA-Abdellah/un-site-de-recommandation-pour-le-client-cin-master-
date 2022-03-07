@@ -91,15 +91,15 @@ a {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  margin-left: -100%;
+  margin-left: -115%;
 }
 
 .fas {
-  font-size: 40px;
+  font-size: 30px;
 }
 
 .fa-sign-out-alt {
-  font-size: 50px;
+  font-size: 30px;
 }
 
 /*fin fooooter*/

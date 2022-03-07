@@ -1,3 +1,28 @@
+<?php
+// session_start();
+if (isset($_SESSION['id'])) {
+    Redirect::to('./');
+}
+
+
+
+
+
+
+if (isset($_POST['registre'])) {
+    $createUser = new UsersController();
+    $createUser->register();
+}
+if (isset($_POST['submit'])) {
+    $login = new UsersController();
+    $login->auth();
+}
+
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -38,14 +63,17 @@
             </div>
         </div>
         <div class="forms">
+
             <div class="form-content">
+
                 <div class="login-form">
+                    <?php include('./views/includes/alerts.php'); ?>
                     <div class="title">Login</div>
-                    <form action="./" method="post">
+                    <form method="post">
                         <div class="input-boxes">
                             <div class="input-box">
                                 <i class="fas fa-envelope"></i>
-                                <input type="email" placeholder="Enter your email" name="email" required>
+                                <input type="text" placeholder="Enter your login" name="login" required>
                             </div>
                             <div class="input-box">
                                 <i class="fas fa-lock"></i>
@@ -63,7 +91,7 @@
                 <div class="signup-form">
 
                     <div class="title">Sign-up</div>
-                    <div action="#" method="post">
+                    <form method="post">
                         <div class="input-boxes">
                             <div class="input-box">
                                 <i class="fas fa-user"></i>
@@ -72,23 +100,23 @@
 
                             <div class="input-box">
                                 <i class="fas fa-envelope"></i>
-                                <input type="email" placeholder="Enter your email" name="email" required>
+                                <input type="email" placeholder="Enter your email" name="email">
                             </div>
                             <div class="input-box">
                                 <i class="fas fa-lock"></i>
                                 <input type="password" placeholder="Enter your password" name="password" required>
                             </div>
-                            <div class="input-box">
+                            <!-- <div class="input-box">
                                 <i class="fas fa-lock"></i>
                                 <input type="password" placeholder="Confirmed your password" name="Cpassword" required>
-                            </div>
+                            </div> -->
                             <div class="button input-box">
-                                <input type="submit" value="Sumbit" name="submit">
+                                <input type="submit" value="Registre" name="registre">
                             </div>
                             <div class="text sign-up-text">Already have an account? <label for="flip">Login now</label>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>

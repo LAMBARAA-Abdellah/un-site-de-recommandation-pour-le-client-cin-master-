@@ -1,3 +1,50 @@
+<?php
+// session_start();
+
+
+function authGuard()
+{
+    var_dump($_SESSION['id']);
+    if (!isset($_SESSION)) {
+        session_start();
+    }
+
+    if (empty($_SESSION['id'])) {
+        Redirect::to('login');
+    }
+}
+
+authGuard();
+?>
+<?php
+// var_dump($_SESSION['id']);
+$data = new PostController();
+$posts = $data->getAllPost();
+
+// echo "<pre>";
+// var_dump($posts);
+// echo "<\pre>";
+?>
+
+<?php
+
+if (isset($_POST['envoyer'])) {
+    $commantaire = new CommentController();
+    $commantaire->addComment();
+}
+
+if (isset($_POST['ajouter'])) {
+    $poste = new PostController();
+    $poste->addPost();
+}
+
+
+
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -35,7 +82,7 @@
                 </li> -->
                 <div class="space">
                     <li class="nav-item">
-                        <a href="deconnexion" class="nav-link"><i class="fas fa-sign-out-alt"></i></a>
+                        <a href="logout" class="nav-link"><i class="fas fa-sign-out-alt"></i></a>
                     </li>
                 </div>
             </ul>
@@ -97,163 +144,81 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form>
-
-
-
+                                    <form method="post">
                                         <div class="mb-3">
                                             <label for="recipient-name" class="col-form-label">Title:</label>
-                                            <input type="text" class="form-control" id="recipient-name">
+                                            <input type="text" name="titre" class="form-control" id="recipient-name">
                                         </div>
                                         <div class="file">
                                             <label for="avatar">Choose a post picture:</label>
 
-                                            <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg">
+                                            <input type="file" id="avatar" name="photo" accept="image/png, image/jpeg">
                                         </div>
                                         <div class="mb-3">
                                             <label for="message-text" class="col-form-label">Description:</label>
-                                            <textarea class="form-control" id="message-text"></textarea>
+                                            <textarea class="form-control" name="description" id="message-text"></textarea>
                                         </div>
-                                    </form>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">share post</button>
+                                    <button type="submit" name="ajouter" class="btn btn-primary">share post</button>
                                 </div>
+                                </form>
+
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="user">
-                        <img src="../public/assets/img/téléchargement.jpg" alt="">
-                        <div class="user-time">
-                            <h4>Lambraa Abdellah</h4>
-                            <h5>12:36</h5>
-                        </div>
-                    </div>
-                    <div class="post">
-                        <h3>
-                            ** aaa bbb **
-                        </h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum, vel consequuntur in, neque aliquid expedita totam nesciunt maxime fugit dolores suscipit? Odit dolorem fugit esse quo dolores totam corrupti impedit.</p>
-                        <img src="../public/assets/img/top.jpg" alt="">
 
-                    </div>
-                    <div class="like">
-                        <div class="jadore">
-                            <a href=""><i class=" fas fa-solid fa-heart"></i></a>
-                            <a href=""><i class=" fas fa-solid fa-thumbs-down"></i></a>
-                        </div>
-                        <div class="commantaire">
-                            <form action="" method="post">
-                                <input type="hidden" name="id" value="<?php echo $empolyer['id']; ?>">
-                                <a href=""><i>11Commantaires</i></a>
 
-                            </form>
-                        </div>
-                        <div>
-                            <a href=""><i class=" fas fa-solid fa-share"></i></a>
-                        </div>
-
-                    </div>
-                    <form action="">
-                        <div class="comment">
-                            <div class="input-group mb-3">
-                                <input name="Commantaire" placeholder="Commantaire" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <?php foreach ($posts as $post) :  ?>
+                    <div class="card">
+                        <div class="user">
+                            <img src="../public/assets/img/téléchargement.jpg" alt="">
+                            <div class="user-time">
+                                <h4><?php echo $post['psseudo'] ?></h4>
+                                <h5><?php echo $post['published_at'] ?></h5>
                             </div>
-                            <button type="button" class="btn btn-primary">Envoyer</button>
-                            <!-- <a href=""> <i class="fas fa-solid fa-paper-plane"></i></a> -->
                         </div>
-                    </form>
-                </div>
-                <div class="card">
-                    <div class="user">
-                        <img src="../public/assets/img/téléchargement.jpg" alt="">
-                        <div class="user-time">
-                            <h4>Lambraa Abdellah</h4>
-                            <h5>12:36</h5>
-                        </div>
-                    </div>
-                    <div class="post">
-                        <h3>
-                            ** aaa bbb **
-                        </h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum, vel consequuntur in, neque aliquid expedita totam nesciunt maxime fugit dolores suscipit? Odit dolorem fugit esse quo dolores totam corrupti impedit.</p>
-                        <img src="../public/assets/img/top.jpg" alt="">
+                        <div class="post">
+                            <h3>
+                                ** <?php echo $post['titre'] ?>**
+                            </h3>
 
-                    </div>
-                    <div class="like">
-                        <div class="jadore">
-                            <a href=""><i class=" fas fa-solid fa-heart"></i></a>
-                            <a href=""><i class=" fas fa-solid fa-thumbs-down"></i></a>
-                        </div>
-                        <div class="commantaire">
-                            <form action="" method="post">
-                                <input type="hidden" name="id" value="<?php echo $empolyer['id']; ?>">
-                                <a href=""><i>11Commantaires</i></a>
+                            <p><?php echo $post['description'] ?></p>
+                            <img src="<?php echo $post['photo'] ?>" alt="">
 
-                            </form>
                         </div>
-                        <div>
-                            <a href=""><i class=" fas fa-solid fa-share"></i></a>
-                        </div>
-
-                    </div>
-                    <form action="">
-                        <div class="comment">
-                            <div class="input-group mb-3">
-                                <input name="Commantaire" placeholder="Commantaire" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                        <div class="like">
+                            <div class="jadore">
+                                <a href=""><i class=" fas fa-solid fa-heart"></i></a>
+                                <a href=""><i class=" fas fa-solid fa-thumbs-down"></i></a>
                             </div>
-                            <button type="button" class="btn btn-primary">Envoyer</button>
-                            <!-- <a href=""> <i class="fas fa-solid fa-paper-plane"></i></a> -->
-                        </div>
-                    </form>
-                </div>
-                <div class="card">
-                    <div class="user">
-                        <img src="../public/assets/img/téléchargement.jpg" alt="">
-                        <div class="user-time">
-                            <h4>Lambraa Abdellah</h4>
-                            <h5>12:36</h5>
-                        </div>
-                    </div>
-                    <div class="post">
-                        <h3>
-                            ** aaa bbb **
-                        </h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum, vel consequuntur in, neque aliquid expedita totam nesciunt maxime fugit dolores suscipit? Odit dolorem fugit esse quo dolores totam corrupti impedit.</p>
-                        <img src="../public/assets/img/top.jpg" alt="">
+                            <div class="commantaire">
+                                <form action="detaille" method="post">
+                                    <input type="hidden" name="id" value="<?php echo $post['id_p']; ?>">
+                                    <input type="submit" value="commantairs">
 
-                    </div>
-                    <div class="like">
-                        <div class="jadore">
-                            <a href=""><i class=" fas fa-solid fa-heart"></i></a>
-                            <a href=""><i class=" fas fa-solid fa-thumbs-down"></i></a>
-                        </div>
-                        <div class="commantaire">
-                            <form action="" method="post">
-                                <input type="hidden" name="id" value="<?php echo $empolyer['id']; ?>">
-                                <a href="detaille"><i>11Commantaires</i></a>
-
-                            </form>
-                        </div>
-                        <div>
-                            <a href=""><i class=" fas fa-solid fa-share"></i></a>
-                        </div>
-
-                    </div>
-                    <form action="">
-                        <div class="comment">
-                            <div class="input-group mb-3">
-                                <input name="Commantaire" placeholder="Commantaire" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </form>
                             </div>
-                            <button type="button" class="btn btn-primary">Envoyer</button>
-                            <!-- <a href=""> <i class="fas fa-solid fa-paper-plane"></i></a> -->
-                        </div>
-                    </form>
-                </div>
+                            <div>
+                                <a href=""><i class=" fas fa-solid fa-share"></i></a>
+                            </div>
 
+                        </div>
+                        <form method="post">
+                            <div class="comment">
+                                <div class="input-group mb-3">
+                                    <input type="hidden" name="id_u" value="<?php echo $_SESSION['id']; ?>">
+                                    <input type="hidden" name="id_p" value="<?php echo $post['id_p']; ?>">
+                                    <input required name="commantaire" placeholder="Commantaire" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                                <button type="submit" name="envoyer" class="btn btn-primary">Envoyer</button>
+                                <!-- <a href=""> <i class="fas fa-solid fa-paper-plane"></i></a> -->
+                            </div>
+                        </form>
+                    </div>
+                <?php endforeach; ?>
 
 
 
@@ -291,7 +256,9 @@
                 </div>
 
 
+
             </div>
+
 
         </div>
 

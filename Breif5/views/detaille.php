@@ -1,3 +1,35 @@
+<?php
+function authGuard()
+{
+    var_dump($_SESSION['id']);
+    if (!isset($_SESSION)) {
+        session_start();
+    }
+
+    if (empty($_SESSION['id'])) {
+        Redirect::to('login');
+    }
+}
+
+authGuard();
+
+if (isset($_POST['id'])) {
+    $data = new PostController();
+    $detaille = $data->detaille();
+    // var_dump($detaille);
+    $comment = new CommentController();
+    $allComment = $comment->getComment();
+    // var_dump($allComment);
+}
+
+if (isset($_POST['envoyer'])) {
+    $commantaire = new CommentController();
+    $commantaire->addComment();
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,7 +56,7 @@
 
                 <div class="space">
                     <li class="nav-item">
-                        <a href="" class="nav-link"><i class="fas fa-home"></i></a>
+                        <a href="./" class="nav-link"><i class="fas fa-home"></i></a>
                     </li>
                     <li class="nav-item">
                         <a href="/profail" class="nav-link"><i class="fas fa-user-alt"></i></a>
@@ -128,16 +160,16 @@
                     <div class="user">
                         <img src="../public/assets/img/téléchargement.jpg" alt="">
                         <div class="user-time">
-                            <h4>Lambraa Abdellah</h4>
-                            <h5>12:36</h5>
+                            <h4><?php echo $detaille->psseudo ?></h4>
+                            <h5><?php echo $detaille->published_at ?></h5>
                         </div>
                     </div>
                     <div class="post">
                         <h3>
-                            ** aaa bbb **
+                            ** <?php echo $detaille->titre ?> **
                         </h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum, vel consequuntur in, neque aliquid expedita totam nesciunt maxime fugit dolores suscipit? Odit dolorem fugit esse quo dolores totam corrupti impedit.</p>
-                        <img src="../public/assets/img/top.jpg" alt="">
+                        <p><?php echo $detaille->description ?></p>
+                        <img src="<?php echo $detaille->photo ?>" alt="">
 
                     </div>
                     <div class="like">
@@ -148,7 +180,7 @@
                         <div class="commantaire">
                             <form action="" method="post">
                                 <input type="hidden" name="id" value="<?php echo $empolyer['id']; ?>">
-                                <a href=""><i>11Commantaires</i></a>
+                                <i>Commantaires</i>
 
                             </form>
                         </div>
@@ -158,27 +190,27 @@
 
                     </div>
                     <div class="detaille-comment">
-                        <div class="sous-comment">
-                            <h4>Lambaraa abdellah:</h4>
-                            <p>gfgfgfgfgfgfgfgfgf ffgfgfg fgfgfg</p>
-                        </div>
-                        <div class="sous-comment">
-                            <h4>Lambaraa abdellah:</h4>
-                            <p>gfgfgfgfgfgfgfgfgf ffgfgfg fgfgfg</p>
-                        </div>
-                        <div class="sous-comment">
-                            <h4>Lambaraa abdellah:</h4>
-                            <p>gfgfgfgfgfgfgfgfgf ffgfgfg fgfgfg</p>
-                        </div>
+                        <?php foreach ($allComment as $comment) :  ?>
 
+                            <div class="sous-comment">
+                                <div class="sous-sous-comment">
+                                    <h4><?php echo $comment->psseudo; ?>:</h4>
+                                    <p><?php echo $comment->message; ?></p>
+                                </div>
 
+                                <h6><?php echo $comment->published; ?></h6>
+                            </div>
+
+                        <?php endforeach ?>
                     </div>
-                    <form action="">
+                    <form method="post">
                         <div class="comment">
                             <div class="input-group mb-3">
-                                <input name="Commantaire" placeholder="Commantaire" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                <input type="hidden" name="id_u" value="<?php echo $_SESSION['id']; ?>">
+                                <input type="hidden" name="id_p" value="<?php echo $post['id_p']; ?>">
+                                <input required name="commantaire" placeholder="Commantaire" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                             </div>
-                            <button type="button" class="btn btn-primary">Envoyer</button>
+                            <button type="submit" name="envoyer" class="btn btn-primary">Envoyer</button>
                             <!-- <a href=""> <i class="fas fa-solid fa-paper-plane"></i></a> -->
                         </div>
                     </form>

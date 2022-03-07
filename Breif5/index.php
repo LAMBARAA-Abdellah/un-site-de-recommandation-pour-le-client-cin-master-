@@ -1,5 +1,6 @@
 <?php
 
+require_once "autoload.php";
 
 $path = $_SERVER["REQUEST_URI"];
 $params = explode("/", ltrim($path, "/"));
@@ -27,12 +28,12 @@ if ($path === "/") {
                     $obj->$action();
                 }
             } else {
-                echo "<h1>page not found :)  !</h1>";
+                include './views/includes/404.php';
             }
         }
     } else if (file_exists($viewPath)) {
         include $viewPath;
     } else {
-        echo 'not found';
+        include './views/includes/404.php';
     }
 }
